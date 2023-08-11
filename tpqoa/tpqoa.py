@@ -55,7 +55,7 @@ class Job(threading.Thread):
         self.exception = None
 
     def run(self):
-        print('Thread #%s started' % self.ident)
+        print(f'Thread #{self.ident} started')
         try:
             self.job = self.callable
             while not self.shutdown_flag.is_set():
@@ -180,7 +180,7 @@ class tpqoa(object):
                 del cs['mid']
         else:
             raise ValueError("Price must be either 'B', 'A' or 'M'.")
-        if len(raw) == 0:
+        if not raw:
             return pd.DataFrame()  # return empty DataFrame if no data
         data = pd.DataFrame(raw)
         data['time'] = pd.to_datetime(data['time'])
@@ -438,8 +438,7 @@ class tpqoa(object):
     def get_positions(self):
         ''' Retrieves and returns positions data. '''
         response = self.ctx.position.list_open(self.account_id).body
-        positions = [p.dict() for p in response.get('positions')]
-        return positions
+        return [p.dict() for p in response.get('positions')]
     
     def cancel_order(self, order_id):
         ''' Cancels an order (e.g. SL order).
